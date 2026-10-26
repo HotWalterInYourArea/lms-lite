@@ -1,0 +1,41 @@
+package com.example.lmslite.model;
+
+import com.example.lmslite.enums.LessonType;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@DiscriminatorValue("QUIZ")
+@NoArgsConstructor
+public class QuizLesson extends Lesson
+{
+
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Question> questions = new ArrayList<>();
+
+    @Column(nullable = false)
+    private int passingScore;
+
+    @Column(nullable = true)
+    private Integer timeLimitMinutes;
+
+    @Override
+    protected LessonType getType()
+    {
+        return LessonType.QUIZ;
+    }
+
+    @Override
+    protected int getEstimatedMinutes()
+    {
+        if (this.timeLimitMinutes != null) return this.timeLimitMinutes;
+        return this.questions.size();
+    }
+}
