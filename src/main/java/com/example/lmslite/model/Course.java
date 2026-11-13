@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,22 +32,19 @@ public class Course
     @JoinColumn(name = "author_id", nullable = false)
     private Instructor author;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private CourseStatus status = CourseStatus.DRAFT;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orderIndex")
     private List<Lesson> lessons = new ArrayList<>();
 
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime publishedAt;
-
-    @PrePersist
-    private void onCreate(){
-        this.createdAt = LocalDateTime.now();
-    }
 
     public int getTotalLessons() {
         return lessons.size();
@@ -55,12 +54,19 @@ public class Course
         return status == CourseStatus.PUBLISHED;
     }
 
-    public void publish() {
-        if (status == CourseStatus.PUBLISHED) {
+    public void publish()
+    {
+        if (status == CourseStatus.PUBLISHED)
+        {
             return;
         }
         this.status = CourseStatus.PUBLISHED;
         this.publishedAt = LocalDateTime.now();
+    }
+
+    public int getTotalEstimatedMinutes()
+    {
+        return lessons.stream().mapToInt(Lesson::getEstimatedMinutes).sum();
     }
 }
 

@@ -1,9 +1,6 @@
 package com.example.lmslite.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,9 +12,11 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Student extends User {
+public class Student extends User
+{
 
-    //@OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Enrollment> enrollments = new ArrayList<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("enrolledAt DESC")
+    private List<Enrollment> enrollments = new ArrayList<>();
 }
 

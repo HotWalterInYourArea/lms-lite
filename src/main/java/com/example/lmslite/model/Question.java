@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Check;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,15 @@ public class Question
     private List<String> options = new ArrayList<>();
 
     @Column(nullable = false)
+    @Check(constraints = "correct_option_index >= 0")
     private int correctOptionIndex;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quiz_id")
     private QuizLesson quiz;
+
+    public boolean isCorrectAnswer(int index)
+    {
+        return index == correctOptionIndex;
+    }
 }

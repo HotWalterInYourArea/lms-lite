@@ -1,12 +1,12 @@
 package com.example.lmslite.model;
 
 import com.example.lmslite.enums.LessonType;
-import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Check;
 
 @Getter
 @Setter
@@ -15,19 +15,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VideoLesson extends Lesson
 {
-    @Column(nullable = false)
     private String videoUrl;
 
-    @Column(nullable = false)
+    @Check(constraints = "duration_minutes > 0")
     private int durationMinutes;
 
     @Override
-    protected LessonType getType() {
+    public LessonType getType() {
         return LessonType.VIDEO;
     }
 
     @Override
-    protected int getEstimatedMinutes() {
+    public int getEstimatedMinutes() {
         return this.durationMinutes;
     }
 }

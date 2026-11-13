@@ -8,7 +8,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "lessons")
+@Table(name = "lessons",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_lesson_course_position",
+                columnNames = {"course_id", "order_index"}
+        ))
 @DiscriminatorColumn(name = "lesson_type")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
@@ -28,8 +32,8 @@ public abstract class Lesson
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    abstract protected LessonType getType();
+    abstract public LessonType getType();
 
-    abstract protected int getEstimatedMinutes();
+    abstract public int getEstimatedMinutes();
 
 }
