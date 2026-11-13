@@ -8,6 +8,7 @@ import jakarta.persistence.Lob;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Check;
 
 
 @Entity
@@ -19,19 +20,19 @@ public class TextLesson extends Lesson
 {
 
     @Lob
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(nullable = false)
+    @Check(constraints = "reading_time_minutes > 0")
     private int readingTimeMinutes;
 
     @Override
-    protected LessonType getType() {
+    public LessonType getType() {
         return LessonType.TEXT;
     }
 
     @Override
-    protected int getEstimatedMinutes() {
+    public int getEstimatedMinutes() {
         return this.readingTimeMinutes;
     }
 }
