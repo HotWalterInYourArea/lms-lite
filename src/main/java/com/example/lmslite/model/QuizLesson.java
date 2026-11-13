@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Check;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,20 +21,23 @@ public class QuizLesson extends Lesson
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuizAttempt> quizAttempts = new ArrayList<>();
+
+    @Check(constraints = "passing_score >= 0")
     private int passingScore;
 
-    @Column(nullable = true)
+    @Check(constraints = "time_limit_minutes > 0")
     private Integer timeLimitMinutes;
 
     @Override
-    protected LessonType getType()
+    public LessonType getType()
     {
         return LessonType.QUIZ;
     }
 
     @Override
-    protected int getEstimatedMinutes()
+    public int getEstimatedMinutes()
     {
         if (this.timeLimitMinutes != null) return this.timeLimitMinutes;
         return this.questions.size();
