@@ -10,4 +10,6 @@ REST API для управления курсами, уроками, студе�
 - Результаты всех тестов
 - Swagger / OpenAPI
 
+Установка: git clone https://github.com/HotWalterInYourArea/lms-lite
+
 Запуск: docker compose up --build
